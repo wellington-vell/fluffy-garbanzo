@@ -6,7 +6,7 @@ type BoxProps = ViewStyle & {
 };
 
 const Box = ({ children, ...props }: BoxProps) => {
-  return <View style={props} children={children} />;
+  return <View style={props}>{children}</View>;
 };
 
 export default Box;

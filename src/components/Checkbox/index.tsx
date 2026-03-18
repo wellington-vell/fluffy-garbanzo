@@ -1,18 +1,38 @@
 import { theme } from "@/src/theme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
-import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
+import {
+  StyleProp,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 import Box from "../Box";
 
 type Props = {
   value?: boolean;
   onChange: (value: boolean) => void;
   label?: string;
+  labelStyle?: StyleProp<TextStyle>;
   style?: TouchableOpacityProps["style"];
   disabled?: boolean;
 };
 
-const Checkbox = ({ value, onChange, label, disabled, style }: Props) => {
+const defaultLabelStyle = {
+  color: theme.colors.brown[700],
+  fontFamily: theme.fontFamily.medium,
+  fontSize: theme.fontSize.MD,
+};
+
+const Checkbox = ({
+  value,
+  onChange,
+  label,
+  labelStyle,
+  disabled,
+  style,
+}: Props) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -25,7 +45,9 @@ const Checkbox = ({ value, onChange, label, disabled, style }: Props) => {
           size={24}
           color={theme.colors.blue[500]}
         />
-        <Text>{label}</Text>
+        {!!label && (
+          <Text style={[defaultLabelStyle, labelStyle]}>{label}</Text>
+        )}
       </Box>
     </TouchableOpacity>
   );

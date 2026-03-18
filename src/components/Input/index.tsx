@@ -1,6 +1,6 @@
 import { theme } from "@/src/theme";
 import { addAlphaColor } from "@/src/utils/color.utils";
-import React, { forwardRef } from "react";
+import React, { ReactNode, forwardRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,17 +13,24 @@ import {
 export type InputProps = TextInputProps & {
   placeholder?: string;
   label?: string;
+  leftIcon?: ReactNode;
   containerStyle?: ViewStyle;
   error?: string;
 };
 
 const Input = forwardRef<TextInput, InputProps>(
   (
-    { placeholder, label, containerStyle, error, testID, ...inputProps },
+    { placeholder, label, leftIcon, containerStyle, error, testID, ...inputProps },
     ref
   ) => {
     return (
       <>
+        {(!!label || !!leftIcon) && (
+          <View style={styles.labelRow}>
+            {!!leftIcon && leftIcon}
+            {!!label && <Text style={styles.Label}>{label}</Text>}
+          </View>
+        )}
         <View style={[styles.Container, containerStyle]} testID={testID}>
           <TextInput
             ref={ref}
@@ -40,6 +47,8 @@ const Input = forwardRef<TextInput, InputProps>(
   }
 );
 
+Input.displayName = "Input";
+
 export default Input;
 
 export const styles = StyleSheet.create({
@@ -52,6 +61,17 @@ export const styles = StyleSheet.create({
     borderColor: theme.colors.gray[200],
     flexDirection: "row",
     alignItems: "center",
+  },
+  labelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 2,
+  },
+  Label: {
+    color: theme.colors.brown[700],
+    fontFamily: theme.fontFamily.medium,
+    fontSize: theme.fontSize.XM,
   },
   Text: {
     color: theme.colors.brown[700],

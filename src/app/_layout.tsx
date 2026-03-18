@@ -7,7 +7,7 @@ import { Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { useAppMigrations } from "../database";
-import store from "../store";
+import appStore from "../store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,7 +33,7 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider store={store}>
+    <Provider store={appStore}>
       <SafeAreaProvider>
         <StatusBar style={"light"} />
         <Stack>

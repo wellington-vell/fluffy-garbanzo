@@ -16,8 +16,8 @@ export const adjustBrightness = (hex: string, percent: number) => {
 
 export function addAlphaColor(colorHex: string, value: number): string {
     const hex = colorHex.replace('#', '');
-    var rgb = hex.substring(0, 6);
-    var alpha = value.toString(16).padStart(2, '0');
+    const rgb = hex.substring(0, 6);
+    const alpha = value.toString(16).padStart(2, '0');
 
     return '#' + rgb + alpha;
 }
