@@ -45,5 +45,3 @@ export const clientesSlice = createSlice({
             })
     }
 });
-
-export const { } = clientesSlice.actions

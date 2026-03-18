@@ -10,5 +10,3 @@ export const appSlice = createSlice({
     initialState,
     reducers: {}
 });
-
-export const { } = appSlice.actions

@@ -1,11 +1,8 @@
-import { ClienteDto } from "@/src/@DTO/ClienteDto";
 import { db, schemas } from "@/src/database";
 import { ClienteSchema } from "@/src/validations/cliente.schema";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { eq, InferInsertModel } from "drizzle-orm";
 import { Alert } from "react-native";
-
-let clients = [] as ClienteDto[];
 
 export const listClientThunk = createAsyncThunk(
     "clientes/list",
@@ -65,7 +62,6 @@ export const updateClientThunk = createAsyncThunk(
             }
 
             const clientUpdated: InferInsertModel<typeof schemas.cliente> = {
-                id: data.id,
                 nome: data.name,
                 sobrenome: data.sobrenome,
                 email: data.email,
@@ -73,7 +69,10 @@ export const updateClientThunk = createAsyncThunk(
                 ativo: data.ativo
             };
 
-            await db.update(schemas.cliente).set(clientUpdated)
+            await db
+                .update(schemas.cliente)
+                .set(clientUpdated)
+                .where(eq(schemas.cliente.id, data.id));
             return data;
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "Ocorreu um erro ao atualizar o cliente";
