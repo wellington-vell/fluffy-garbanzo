@@ -1,11 +1,12 @@
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import Box from "@/src/components/Box";
-import Button from "@/src/components/Button";
 import ClientCard from "@/src/components/ClientCard";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
   deleteClientThunk,
   listClientThunk,
 } from "@/src/store/clientes/thunks";
+import { theme } from "@/src/theme";
 import { router, useFocusEffect } from "expo-router";
 import React, { useCallback } from "react";
 import {
@@ -24,7 +25,7 @@ const Clientes = () => {
   useFocusEffect(
     useCallback(() => {
       dispatch(listClientThunk());
-    }, [])
+    }, [dispatch])
   );
 
   const handleRemove = (clientId: number) => {
@@ -37,7 +38,7 @@ const Clientes = () => {
           onPress: () => dispatch(deleteClientThunk(clientId)),
         },
         {
-          text: "Não",
+          text: "Não",
           style: "cancel",
         },
       ],
@@ -49,44 +50,65 @@ const Clientes = () => {
     router.push(`/clientes/form?id=${clientId}`);
   };
 
+  const handleLinkProdutos = (clientId: number) => {
+    router.push(`/clientes/produtos?clienteId=${clientId}`);
+  };
+
+  const handleView = (clientId: number) => {
+    router.push(`/clientes/${clientId}`);
+  };
+
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Box flex={1} padding={16}>
-          <ActivityIndicator />
+      <SafeAreaView style={styles.container}>
+        <Box flex={1} padding={16} justifyContent="center" alignItems="center" gap={12}>
+          <ActivityIndicator size="large" color={theme.colors.blue[500]} />
+          <Text style={styles.loadingText}>Carregando clientes...</Text>
         </Box>
       </SafeAreaView>
     );
   }
 
+  const listHeader = (
+    <Box marginBottom={8}>
+      <Text style={styles.countText}>
+        {list.length} {list.length === 1 ? "cliente" : "clientes"}
+      </Text>
+    </Box>
+  );
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Box flex={1} padding={16}>
-        <Button
-          onPress={() => router.push("/clientes/form")}
-          label="Novo Cliente"
-        />
-        <Box>
-          {list.length === 0 ? (
-            <Text style={styles.emptyText}>Não há clientes cadastrados</Text>
-          ) : (
-            <FlatList
-              data={list}
-              contentContainerStyle={{
-                gap: 16,
-                paddingHorizontal: 8,
-                paddingVertical: 16,
-              }}
-              renderItem={({ item }) => (
-                <ClientCard
-                  client={item}
-                  onRemove={() => handleRemove(item.id)}
-                  onEdit={() => handleEdit(item.id)}
-                />
-              )}
+    <SafeAreaView style={styles.container}>
+      <Box flex={1} padding={16} gap={24}>
+        {list.length === 0 ? (
+          <Box flex={1} justifyContent="center" alignItems="center" gap={16} paddingVertical={32}>
+            <IconSymbol
+              name="person.2.fill"
+              size={48}
+              color={theme.colors.gray[400]}
             />
-          )}
-        </Box>
+            <Text style={styles.emptyTitle}>Nenhum cliente cadastrado</Text>
+            <Text style={styles.emptyDescription}>
+              Toque no + no canto superior para começar
+            </Text>
+          </Box>
+        ) : (
+          <FlatList
+            data={list}
+            keyExtractor={(item) => String(item.id)}
+            ListHeaderComponent={listHeader}
+            contentContainerStyle={styles.listContent}
+            renderItem={({ item }) => (
+              <ClientCard
+                client={item}
+                onPress={() => handleView(item.id)}
+                onRemove={() => handleRemove(item.id)}
+                onEdit={() => handleEdit(item.id)}
+                onLinkProdutos={() => handleLinkProdutos(item.id)}
+              />
+            )}
+          />
+        )}
       </Box>
     </SafeAreaView>
   );
@@ -95,15 +117,35 @@ const Clientes = () => {
 export default Clientes;
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 26,
-    fontWeight: "medium",
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
   },
-  emptyText: {
-    fontSize: 16,
-    fontWeight: "medium",
-    marginTop: 26,
+  loadingText: {
+    fontSize: theme.fontSize.MD,
+    fontFamily: theme.fontFamily.regular,
+    color: theme.colors.gray[400],
+  },
+  countText: {
+    fontSize: theme.fontSize.SM,
+    fontFamily: theme.fontFamily.regular,
+    color: theme.colors.gray[400],
+  },
+  listContent: {
+    gap: 16,
+    paddingHorizontal: 0,
+    paddingBottom: 24,
+  },
+  emptyTitle: {
+    fontSize: theme.fontSize.LG,
+    fontFamily: theme.fontFamily.medium,
+    color: theme.colors.brown[800],
     textAlign: "center",
-    color: "#999",
+  },
+  emptyDescription: {
+    fontSize: theme.fontSize.MD,
+    fontFamily: theme.fontFamily.regular,
+    color: theme.colors.gray[400],
+    textAlign: "center",
   },
 });
