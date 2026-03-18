@@ -2,11 +2,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { appSlice } from './app';
 import { clientesSlice } from './clientes';
+import { clienteProdutosSlice } from './clienteProdutos';
+import { produtosSlice } from './produtos';
 
 export const store = configureStore({
     reducer: {
         app: appSlice.reducer,
-        clients: clientesSlice.reducer
+        clients: clientesSlice.reducer,
+        clienteProdutos: clienteProdutosSlice.reducer,
+        produtos: produtosSlice.reducer
     },
 });
 
